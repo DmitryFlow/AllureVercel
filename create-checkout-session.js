@@ -3,25 +3,35 @@ const stripe = require('stripe')('sk_test_51PHS7yAlI4elvZn3wZHyyXt95qSuGMOCcirsS
 module.exports = async (req, res) => {
     const { price, id } = req.body;
 
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: [{
-            price_data: {
-                currency: 'eur',
-                product_data: {
-                    name: 'Total Purchase',
-                    metadata: {
-                        id: id
-                    }
-                },
-                unit_amount: price * 100, // Stripe acepta centavos
-            },
-            quantity: 1,
-        }],
-        mode: 'payment',
-        success_url: `http://localhost:3000/summary?orderId=${id}`, // Reemplaza con tu URL de éxito
-        cancel_url: `http://localhost:3000/cancel?orderId=${id}`,  // Reemplaza con tu URL de cancelación
-    });
+    if (req.method !== 'POST') {
+        res.status(405).send({ message: 'Only POST requests are allowed' });
+        return;
+    }
 
-    res.status(200).json({ id: session.id });
+    try {
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [{
+                price_data: {
+                    currency: 'eur',
+                    product_data: {
+                        name: 'Total Purchase',
+                        metadata: {
+                            id: id
+                        }
+                    },
+                    unit_amount: price * 100, // Stripe acepta centavos
+                },
+                quantity: 1,
+            }],
+            mode: 'payment',
+            success_url: `http://localhost:3000/summary?orderId=${id}`, // Reemplaza con tu URL de éxito
+            cancel_url: `http://localhost:3000/summary?orderId=${id}`,  // Reemplaza con tu URL de cancelación
+        });
+
+        res.status(200).json({ id: session.id });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'Failed to create session' });
+    }
 };
