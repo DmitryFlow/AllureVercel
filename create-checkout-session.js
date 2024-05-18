@@ -29,8 +29,8 @@ module.exports = async (req, res) => {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: `https://tu-dominio.com/summary?orderId=${id}`, // Reemplaza con tu URL de éxito
-            cancel_url: `https://tu-dominio.com/summary?orderId=${id}`,  // Reemplaza con tu URL de cancelación
+            success_url: `http://localhost:3000/summary?orderId=${id}`, // Reemplaza con tu URL de éxito
+            cancel_url: `http://localhost:3000/summary?orderId=${id}`,  // Reemplaza con tu URL de cancelación
         });
 
         res.status(200).json({ id: session.id });
