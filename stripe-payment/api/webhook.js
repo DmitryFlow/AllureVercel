@@ -1,7 +1,8 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-module.exports = async (req, res) => {
+//module.exports = async (req, res) => {
+export default async (req, res) => {
 	const sig = req.headers['stripe-signature'];
 	let event;
 
