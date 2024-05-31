@@ -1,4 +1,5 @@
 import firebase from 'firebase/app';
+import { getApps, initializeApp } from "firebase/app";
 import 'firebase/firestore';
 
 const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET_KEY);
@@ -13,8 +14,8 @@ const firebaseConfig = {
     measurementId: "G-JFKF4BW6V3"
 };
 
-if (!firebase.apps.length) {
-	firebase.initializeApp(firebaseConfig);
+if (getApps().length < 1) {
+	initializeApp(firebaseConfig);
 }
 
 //module.exports = async (req, res) => {
